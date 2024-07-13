@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: Movie Finder App
+
+
+server:
+  servlet:
+    context-path: /api/v1
+  port: 8080
+
+
+tmdb:
+  api:
+    url: https://api.themoviedb.org/3

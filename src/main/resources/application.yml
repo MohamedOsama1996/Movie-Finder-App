@@ -1,7 +1,18 @@
 spring:
+  jpa:
+    show-sql: true
   application:
     name: Movie Finder App
-
+  datasource:
+    url: jdbc:mysql://localhost:3306/movie-finder
+    username: admin
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  redis:
+    host: localhost
+    port: 6379
+  flyway:
+    enabled: true
 
 server:
   servlet:
@@ -12,3 +23,14 @@ server:
 tmdb:
   api:
     url: https://api.themoviedb.org/3
+    key: 284405be13bed1d06a88682ad0fd04f0
+
+flyway:
+  user: admin
+  password: 123456
+  url: jdbc:mysql://localhost:3306/movie-finder
+  locations: classpath:db/migration  # Location of migration scripts
+
+
+pages:
+  maximum: 1

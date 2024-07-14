@@ -61,9 +61,43 @@ public class MovieScheduler {
         Pageable pageable = PageRequest.of(page-1, 20);
         List<Movie> savedMovies;
         List<Movie>trackPopularity = new ArrayList<>();
+        List<Movie>deleteUnPopular = new ArrayList<>();
         List<Movie> clientToModel = clientMovies.stream().map(movieMapper::ToEntity).toList();
         List<Movie> movieList = movieRepository.findAll(pageable).stream().toList();
         List<Movie> newMovies = new ArrayList<>();
+
+        // this part to track if suddenly a movie became unpopular so it removed from certain page
+        // then it should be removed from the db to track live changes
+        for(Movie movie : movieList){
+            ClientMovie clientMovie = clientMovies.stream().filter(it -> it.getTmdbId()== movie.getTmdbId()).findFirst().orElse(null);
+            if(clientMovie==null){
+                deleteUnPopular.add(movie);
+            }
+            movieRepository.deleteAll(deleteUnPopular);
+        }
+
+        for(Movie movie : movieList){
+            ClientMovie clientMovie = clientMovies.stream().filter(it -> it.getTmdbId()== movie.getTmdbId()).findFirst().orElse(null);
+            if(clientMovie!=null){
+                if(clientMovie.getPopularity() != movie.getPopularity()){
+                    movie.setPopularity(clientMovie.getPopularity());
+                    trackPopularity.add(movie);
+                }
+            }
+            movieRepository.saveAll(trackPopularity);
+        }
+
+
+        for(Movie movie : movieList){
+            ClientMovie clientMovie = clientMovies.stream().filter(it -> it.getTmdbId()== movie.getTmdbId()).findFirst().orElse(null);
+            if(clientMovie!=null){
+                if(clientMovie.getPopularity() != movie.getPopularity()){
+                    movie.setPopularity(clientMovie.getPopularity());
+                    trackPopularity.add(movie);
+                }
+            }
+            movieRepository.saveAll(trackPopularity);
+        }
         if(!movieList.isEmpty()) {
             for (Movie movie : movieList) {
                 Optional<Movie> optional = clientToModel.stream().filter(model -> model.getTmdbId() == movie.getTmdbId()).findFirst();
@@ -75,16 +109,7 @@ public class MovieScheduler {
         }else{
           savedMovies =  movieRepository.saveAll(clientToModel);
         }
-        for(Movie movie : movieList){
-            ClientMovie clientMovie = clientMovies.stream().filter(it -> it.getTmdbId()== movie.getTmdbId()).findFirst().orElse(null);
-            if(clientMovie!=null){
-                if(clientMovie.getPopularity() != movie.getPopularity()){
-                    movie.setPopularity(clientMovie.getPopularity());
-                    trackPopularity.add(movie);
-                }
-            }
-            movieRepository.saveAll(trackPopularity);
-        }
+
 
 
         List<MovieGenre> movieGenres = new ArrayList<>();

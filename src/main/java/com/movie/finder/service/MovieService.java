@@ -1,6 +1,7 @@
 package com.movie.finder.service;
 
 import com.movie.finder.dto.MovieDto;
+import com.movie.finder.model.User;
 
 import java.util.List;
 
@@ -8,4 +9,8 @@ public interface MovieService {
 
 
     List<MovieDto> getMoviesByPage(int page);
+
+    void AddMovieToFavorites(int movieId, User user);
+
+    List<MovieDto>getUserFavorites(User user);
 }

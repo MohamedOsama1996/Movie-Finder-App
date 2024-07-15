@@ -23,3 +23,20 @@ CREATE TABLE movies_genres(
   FOREIGN KEY (genre_id) REFERENCES genres(genre_id)
 );
 
+CREATE TABLE users(
+
+    user_id INT PRIMARY KEY AUTO_INCREMENT,
+    full_name VARCHAR(255) NOT NULL,
+    email VARCHAR(40) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    created_at DATE NOT NULL
+);
+
+CREATE TABLE users_movies(
+
+  user_movie_id INT PRIMARY KEY AUTO_INCREMENT,
+  user_id INT NOT NULL,
+  movie_id INT NOT NULL,
+  FOREIGN KEY (user_id) REFERENCES users(user_id),
+  FOREIGN KEY (movie_id) REFERENCES movies(id)
+)

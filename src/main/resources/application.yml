@@ -34,3 +34,8 @@ flyway:
 
 pages:
   maximum: 1
+
+security:
+  jwt:
+    secret-key: xtHRAXRvSgESS3F5RdBTEi7LWYKnnG2vlbNZhVaAXFE=
+    expiration-time: 3600000

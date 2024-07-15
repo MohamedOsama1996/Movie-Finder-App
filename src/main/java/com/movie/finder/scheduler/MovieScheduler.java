@@ -76,6 +76,8 @@ public class MovieScheduler {
             movieRepository.deleteAll(deleteUnPopular);
         }
 
+        //this part is to change popularity of a movie
+        // if it is changed in the tmdb api and it is still in the current page
         for(Movie movie : movieList){
             ClientMovie clientMovie = clientMovies.stream().filter(it -> it.getTmdbId()== movie.getTmdbId()).findFirst().orElse(null);
             if(clientMovie!=null){

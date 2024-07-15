@@ -1,13 +1,14 @@
 package com.movie.finder.controller;
 
 import com.movie.finder.dto.MovieDto;
+import com.movie.finder.model.User;
 import com.movie.finder.service.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -22,5 +23,20 @@ public class MovieController {
     public ResponseEntity<List<MovieDto>>getMovies(@RequestParam(name = "page",defaultValue = "1",required = false) int page){
 
         return ResponseEntity.ok().body(movieService.getMoviesByPage(page));
+    }
+
+    @PostMapping("/{movieId}/favorites")
+    public ResponseEntity<?> addUserFilmToFavorite(@PathVariable int movieId){
+        UsernamePasswordAuthenticationToken authentication = (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        User user = (User)authentication.getPrincipal();
+        movieService.AddMovieToFavorites(movieId,user);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/favorites")
+    public ResponseEntity<List<MovieDto>> getUserFavorites(){
+        UsernamePasswordAuthenticationToken authentication = (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        User user = (User)authentication.getPrincipal();
+        return ResponseEntity.ok( movieService.getUserFavorites(user));
     }
 }

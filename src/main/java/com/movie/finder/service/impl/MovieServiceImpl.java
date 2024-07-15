@@ -4,10 +4,11 @@ import com.movie.finder.client.MovieClient;
 import com.movie.finder.client.response.ClientMovie;
 import com.movie.finder.dto.MovieDto;
 import com.movie.finder.mapper.MovieMapper;
-import com.movie.finder.model.Genre;
-import com.movie.finder.model.Movie;
+import com.movie.finder.model.*;
 import com.movie.finder.repo.GenreRepository;
 import com.movie.finder.repo.MovieRepository;
+import com.movie.finder.repo.UserMovieRepository;
+import com.movie.finder.repo.UserRepository;
 import com.movie.finder.service.MovieService;
 import com.movie.finder.util.Utility;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -29,13 +31,17 @@ public class MovieServiceImpl implements MovieService {
    public MovieRepository movieRepository;
 
     @Autowired
-   public  GenreRepository genreRepository;
+   public UserRepository userRepository;
 
     @Autowired
    public MovieMapper movieMapper;
 
    @Autowired
    public RedisTemplate<String,List<MovieDto>> redisTemplate;
+
+   @Autowired
+   public UserMovieRepository userMovieRepository;
+
 
     @Override
     public List<MovieDto> getMoviesByPage(int page) {
@@ -58,5 +64,25 @@ public class MovieServiceImpl implements MovieService {
                 return movieDtos;
             }
         }
+    }
+
+    @Override
+    public void AddMovieToFavorites(int movieId, User user) {
+
+        Optional<Movie> movie = movieRepository.findById(movieId);
+        if(movie.isEmpty()) throw new RuntimeException();
+        Long userId = userRepository.findByEmail(user.getEmail()).get().getId();
+        UserMovie userMovie = new UserMovie();
+        userMovie.setMovie(new Movie(movie.get().getId()));
+        userMovie.setUser(new User(userId));
+        userMovieRepository.save(userMovie);
+
+    }
+
+    @Override
+    public List<MovieDto> getUserFavorites(User user) {
+         List<UserMovie> userMovies = userMovieRepository.findByUser(new User(user.getId()));
+         List<Movie> movieFavorites = userMovies.stream().map(UserMovie::getMovie).toList();
+         return movieFavorites.stream().map(movie -> movieMapper.EntityToDto(movie)).toList();
     }
 }

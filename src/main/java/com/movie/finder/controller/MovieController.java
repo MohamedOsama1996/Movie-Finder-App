@@ -2,6 +2,7 @@ package com.movie.finder.controller;
 
 import com.movie.finder.dto.MovieDto;
 import com.movie.finder.model.User;
+import com.movie.finder.model.request.UserMovieRatingRequest;
 import com.movie.finder.service.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -38,5 +39,13 @@ public class MovieController {
         UsernamePasswordAuthenticationToken authentication = (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         User user = (User)authentication.getPrincipal();
         return ResponseEntity.ok( movieService.getUserFavorites(user));
+    }
+
+    @PostMapping("/{movieId}/rate")
+    public ResponseEntity<?> userRateMovies(@PathVariable int movieId,@RequestBody UserMovieRatingRequest userMovieRatingRequest){
+        UsernamePasswordAuthenticationToken authentication = (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        User user = (User)authentication.getPrincipal();
+        movieService.userRateMovie(movieId,userMovieRatingRequest.getUserRating(),user);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

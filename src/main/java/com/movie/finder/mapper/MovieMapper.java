@@ -31,20 +31,10 @@ public class MovieMapper {
         movieDto.setPopularity(movie.getPopularity());
         movieDto.setOriginalTitle(movie.getTitle());
         movieDto.setGenres(movieGenres.stream().map(MovieGenre::getGenre).toList());
+        movieDto.setAverageRating(movie.getAverageRating());
         return movieDto;
     }
 
-
-    public  Movie ToEntity(MovieDto movieDto){
-
-        Movie movie = new Movie();
-        movie.setTmdbId(movieDto.getId());
-        movie.setLang(movieDto.getOriginalLanguage());
-        movie.setTitle(movieDto.getOriginalTitle());
-        movie.setReleaseDate(movieDto.getReleaseDate());
-        movie.setPopularity(movieDto.getPopularity());
-        return movie;
-    }
 
     public  Movie ToEntity(ClientMovie clientMovie){
 

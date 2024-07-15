@@ -5,7 +5,8 @@ CREATE TABLE movies (
   lang VARCHAR(3) NOT NULL,
   release_date VARCHAR(20),
   rating_count INT DEFAULT 0,
-  average_rating DECIMAL(2, 1) ,
+  average_rating DECIMAL(2, 1) DEFAULT 0,
+  total_rating decimal(7,1) DEFAULT 0,
   popularity DECIMAL(7,3)-- Stores rating up to two decimal places
 );
 
@@ -39,4 +40,14 @@ CREATE TABLE users_movies(
   movie_id INT NOT NULL,
   FOREIGN KEY (user_id) REFERENCES users(user_id),
   FOREIGN KEY (movie_id) REFERENCES movies(id)
-)
+);
+
+CREATE TABLE users_movies_rating(
+
+  user_movie_rating_id INT PRIMARY KEY AUTO_INCREMENT,
+  user_id INT NOT NULL,
+  movie_id INT NOT NULL,
+  user_movie_rating DECIMAL(2,1) NOT NULL,
+  FOREIGN KEY (user_id) REFERENCES users(user_id),
+  FOREIGN KEY (movie_id) REFERENCES movies(id)
+);

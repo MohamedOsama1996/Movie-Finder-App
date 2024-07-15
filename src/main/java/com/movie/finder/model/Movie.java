@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -28,6 +27,8 @@ public class Movie {
     private int ratingCount;
 
     private double averageRating;
+
+    private double totalRating;
 
     public Movie(int id) {
         this.id = id;

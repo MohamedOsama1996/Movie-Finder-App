@@ -28,4 +28,6 @@ public class MovieDto implements Serializable {
 
 
     private List<Genre> genres;
+
+    private double averageRating;
 }

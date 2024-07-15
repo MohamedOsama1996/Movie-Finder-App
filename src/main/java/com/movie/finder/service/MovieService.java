@@ -13,4 +13,6 @@ public interface MovieService {
     void AddMovieToFavorites(int movieId, User user);
 
     List<MovieDto>getUserFavorites(User user);
+
+    void userRateMovie(int movieId,double userRating,User user);
 }

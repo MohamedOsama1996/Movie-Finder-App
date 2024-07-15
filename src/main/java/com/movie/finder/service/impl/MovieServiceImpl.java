@@ -5,10 +5,7 @@ import com.movie.finder.client.response.ClientMovie;
 import com.movie.finder.dto.MovieDto;
 import com.movie.finder.mapper.MovieMapper;
 import com.movie.finder.model.*;
-import com.movie.finder.repo.GenreRepository;
-import com.movie.finder.repo.MovieRepository;
-import com.movie.finder.repo.UserMovieRepository;
-import com.movie.finder.repo.UserRepository;
+import com.movie.finder.repo.*;
 import com.movie.finder.service.MovieService;
 import com.movie.finder.util.Utility;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +29,9 @@ public class MovieServiceImpl implements MovieService {
 
     @Autowired
    public UserRepository userRepository;
+
+    @Autowired
+    public UserMovieRatingRepository userMovieRatingRepository;
 
     @Autowired
    public MovieMapper movieMapper;
@@ -84,5 +84,24 @@ public class MovieServiceImpl implements MovieService {
          List<UserMovie> userMovies = userMovieRepository.findByUser(new User(user.getId()));
          List<Movie> movieFavorites = userMovies.stream().map(UserMovie::getMovie).toList();
          return movieFavorites.stream().map(movie -> movieMapper.EntityToDto(movie)).toList();
+    }
+
+    @Override
+    public void userRateMovie(int movieId,double userRating, User user) {
+        Optional<Movie> movieOptional = movieRepository.findById(movieId);
+        if(movieOptional.isEmpty()) throw new RuntimeException();
+        Movie movie = movieOptional.get();
+        Long userId = userRepository.findByEmail(user.getEmail()).get().getId();
+        Optional<UserMovieRating> userMovieRatingOptional = userMovieRatingRepository.findByUserAndMovie(new User(userId),new Movie(movieId));
+        if(userMovieRatingOptional.isPresent()) throw new RuntimeException();
+        UserMovieRating userMovieRating = new UserMovieRating();
+        userMovieRating.setMovie(new Movie(movie.getId()));
+        userMovieRating.setUser(new User(userId));
+        userMovieRating.setUserMovieRating(userRating);
+        userMovieRatingRepository.save(userMovieRating);
+        movie.setRatingCount(movie.getRatingCount()+1);
+        movie.setTotalRating(movie.getTotalRating()+userRating);
+        movie.setAverageRating(movie.getTotalRating()/movie.getRatingCount());
+        movieRepository.save(movie);
     }
 }

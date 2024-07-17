@@ -1,7 +1,5 @@
 package com.movie.finder.service.impl;
 
-import com.movie.finder.client.MovieClient;
-import com.movie.finder.client.response.ClientMovie;
 import com.movie.finder.dto.MovieDto;
 import com.movie.finder.exception.ErrorCode;
 import com.movie.finder.exception.MovieFinderException;
@@ -46,6 +44,11 @@ public class MovieServiceImpl implements MovieService {
    @Autowired
    public UserMovieRepository userMovieRepository;
 
+   @Autowired
+   public GenreRepository genreRepository;
+
+   @Autowired
+   public MovieGenreRepository movieGenreRepository;
 
     @Override
     public List<MovieDto> getMoviesByPage(int page) {
@@ -59,7 +62,7 @@ public class MovieServiceImpl implements MovieService {
             } else {
                 List<MovieDto> movieDtos = new ArrayList<>();
                 Sort.Direction direction = Sort.Direction.fromString("desc");
-                Pageable pageable = PageRequest.of(page - 1, 20, Sort.by(direction, "popularity"));
+                Pageable pageable = PageRequest.of(page, 20, Sort.by(direction, "popularity"));
                 Page<Movie> movieList = movieRepository.findAll(pageable);
                 if (!movieList.isEmpty()) {
                     movieDtos = movieList.stream().map(movie -> movieMapper.EntityToDto(movie)).toList();
@@ -125,5 +128,21 @@ public class MovieServiceImpl implements MovieService {
             throw new MovieFinderException(ErrorCode.MF_ERR_500, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
+    }
+
+    @Override
+    public List<MovieDto> getMoviesByGenre(String genre,int page) {
+
+        Optional<Genre> genreOptional = genreRepository.findByGenreName(genre);
+        if(genreOptional.isEmpty()) throw new MovieFinderException(ErrorCode.MF_GENRE_ERR_404,HttpStatus.NOT_FOUND);
+        try{
+            Pageable pageable = PageRequest.of(page, 20);
+
+            List<MovieGenre> movieGenres = movieGenreRepository.findByGenre_GenreId(genreOptional.get().getGenreId(),pageable);
+            return movieGenres.stream().map(movieGenre -> movieMapper.EntityToDto(movieGenre.getMovie())).toList();
+
+        }catch (DataAccessException ex){
+            throw new MovieFinderException(ErrorCode.MF_ERR_500, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }

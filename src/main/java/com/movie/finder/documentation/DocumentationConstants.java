@@ -28,5 +28,9 @@ public interface DocumentationConstants {
         String POST_RATE_MOVIE_API = "Post Request to Rate Movie";
         String POST_RATE_MOVIE_API_DESCRIPTION = "Make User Rate Movies";
 
+
+        String GET_SEARCH_MOVIE_API = "Get Request to Search For a Movie";
+        String GET_SEARCH_MOVIE_API_DESCRIPTION = "Get Request to Search For a Movie based on genre ";
+
     }
 }

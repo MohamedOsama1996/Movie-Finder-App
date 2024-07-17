@@ -60,4 +60,12 @@ public class MovieController {
         movieService.userRateMovie(movieId,userMovieRatingRequest.getUserRating(),user);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @Operation(summary = DocumentationConstants.MovieControllerDescription.GET_SEARCH_MOVIE_API,
+            description = DocumentationConstants.MovieControllerDescription.GET_SEARCH_MOVIE_API_DESCRIPTION)
+    @GetMapping("/search")
+    public ResponseEntity<List<MovieDto>> searchForAMovieByParams(@RequestParam(value = "genre") String genre,
+                                                                  @RequestParam(value = "page") int page){
+        return ResponseEntity.ok( movieService.getMoviesByGenre(genre,page));
+    }
 }

@@ -10,7 +10,8 @@ public enum ErrorCode {
     MF_MOVIE_ERR_409("MF_MOVIE_ERR_409","you cant rate a movie you rated it before"),
     MF_CLIENT_GENRE_500("MF_CLIENT_GENRE_500","Cant Reach Tmdb Api Right now"),
     MF_TOKEN_500("MF_TOKEN_500","Something went wrong while building token"),
-    MF_TOKEN_501("MF_TOKEN_500","Something Went Wrong While Extracting Claims");
+    MF_TOKEN_501("MF_TOKEN_500","Something Went Wrong While Extracting Claims"),
+    MF_GENRE_ERR_404("MF_GENRE_ERR_404","Genre Not Found");
 
 
     private final String error;

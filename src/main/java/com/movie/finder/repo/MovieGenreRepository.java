@@ -2,6 +2,7 @@ package com.movie.finder.repo;
 
 import com.movie.finder.model.Movie;
 import com.movie.finder.model.MovieGenre;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -12,5 +13,5 @@ public interface MovieGenreRepository extends JpaRepository<MovieGenre,Integer> 
 
     List<MovieGenre> findByMovie(Movie movie);
 
-    void deleteByMovie(Movie movie);
+    List<MovieGenre> findByGenre_GenreId(int id, Pageable pageable);
 }

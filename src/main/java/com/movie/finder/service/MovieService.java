@@ -15,4 +15,6 @@ public interface MovieService {
     List<MovieDto>getUserFavorites(User user);
 
     void userRateMovie(int movieId,double userRating,User user);
+
+    List<MovieDto> getMoviesByGenre(String genre,int page);
 }

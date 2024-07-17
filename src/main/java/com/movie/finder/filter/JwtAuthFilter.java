@@ -1,5 +1,6 @@
 package com.movie.finder.filter;
 
+
 import com.movie.finder.service.JwtService;
 import com.movie.finder.service.impl.CustomUserDetailsService;
 import com.movie.finder.util.Utility;
@@ -32,10 +33,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         final String authHeader = request.getHeader(Utility.AUTHORIZATION_HEADER);
 
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            filterChain.doFilter(request, response);
-        }
-        try {
+
             final String jwt = authHeader.substring(7);
             final String userEmail = jwtService.extractUsername(jwt);
 
@@ -56,9 +54,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             }
             filterChain.doFilter(request, response);
 
-        }catch (Exception ex){
-             throw new RuntimeException("Something Went Wrong While Processing Token");
-        }
+
 
 
     }

@@ -1,27 +1,29 @@
-package com.movie.finder.config;
+package com.movie.finder.scheduler;
 
 import com.movie.finder.client.GenreClient;
 import com.movie.finder.client.response.ClientGenre;
 import com.movie.finder.mapper.GenreMapper;
 import com.movie.finder.model.Genre;
 import com.movie.finder.repo.GenreRepository;
-import com.movie.finder.scheduler.GenreScheduler;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+
 import java.util.List;
 
 @Component
-public class StartupRunner implements CommandLineRunner {
+public class GenreScheduler {
 
-   @Autowired
-    GenreScheduler genreScheduler;
+    @Autowired
+    GenreClient genreClient;
 
-    @Override
-    public void run(String... args) throws Exception {
+    @Autowired
+    GenreRepository genreRepository;
 
-        genreScheduler.getGenresFromApi();
-
+    @Scheduled(fixedRate = 300000)
+    public void getGenresFromApi() {
+        List<ClientGenre> clientGenres = genreClient.getGenres();
+        List<Genre> genres = clientGenres.stream().map(GenreMapper::toEntity).toList();
+        genreRepository.saveAll(genres);
     }
 }

@@ -3,9 +3,12 @@ package com.movie.finder.client.impl;
 import com.movie.finder.client.MovieClient;
 import com.movie.finder.client.response.TmdbMovieResponse;
 import com.movie.finder.client.response.ClientMovie;
+import com.movie.finder.exception.ErrorCode;
+import com.movie.finder.exception.MovieFinderException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -27,8 +30,14 @@ public class MovieClientImpl implements MovieClient {
     @Override
     public List<ClientMovie> getPage(int page) {
 
-        String url = String.format("%s/discover/movie?api_key=%s&page=%d",TMDB_API_BASE_URL, TMDB_API_KEY,page);
-        ResponseEntity<TmdbMovieResponse>  tmdbResponse=restTemplate.exchange(url, HttpMethod.GET,null, TmdbMovieResponse.class);
-        return  tmdbResponse.getBody().getClientMovieList();
+        try {
+            String url = String.format("%s/discover/movie?api_key=%s&page=%d",TMDB_API_BASE_URL, TMDB_API_KEY,page);
+            ResponseEntity<TmdbMovieResponse>  tmdbResponse=restTemplate.exchange(url, HttpMethod.GET,null, TmdbMovieResponse.class);
+            return  tmdbResponse.getBody().getClientMovieList();
+        }catch (Exception ex){
+            throw new MovieFinderException(ErrorCode.MF_CLIENT_GENRE_500, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+
     }
 }

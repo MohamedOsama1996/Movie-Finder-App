@@ -26,12 +26,14 @@ public class SecurityConfiguration {
     @Autowired
     JwtAuthFilter jwtAuthFilter;
 
+    public static final String [] AUTH_WHITELIST ={"/auth/**","/api-docs/**","/swagger-ui/**", "/swagger-ui.html","/webjars/**","/swagger-resources/**"};
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf()
                 .disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/auth/**")
+                .requestMatchers(AUTH_WHITELIST)
                 .permitAll()
                 .anyRequest()
                 .authenticated()

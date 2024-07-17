@@ -11,4 +11,6 @@ import java.util.List;
 public interface MovieGenreRepository extends JpaRepository<MovieGenre,Integer> {
 
     List<MovieGenre> findByMovie(Movie movie);
+
+    void deleteByMovie(Movie movie);
 }

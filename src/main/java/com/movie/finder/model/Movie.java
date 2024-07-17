@@ -37,6 +37,6 @@ public class Movie {
 
     private double popularity;
 
-    @OneToMany(mappedBy = "movie")
+    @OneToMany(mappedBy = "movie",cascade = CascadeType.ALL)
     private List<MovieGenre> movieGenres;
 }

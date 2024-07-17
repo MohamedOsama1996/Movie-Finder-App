@@ -27,7 +27,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     JwtService jwtService;
 
 
-
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
@@ -66,7 +65,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         String path = request.getRequestURI();
-        return path.startsWith("/api/v1/auth/signup") || path.startsWith("/api/v1/auth/login");
+        return path.startsWith("/api/v1/auth/signup") || path.startsWith("/api/v1/auth/login") ||
+                path.startsWith("/api/v1/api-docs") || path.startsWith("/api/v1/swagger-ui")
+                || path.startsWith("/api/v1/webjars") || path.startsWith("/api/v1/swagger-resources");
     }
 
 }

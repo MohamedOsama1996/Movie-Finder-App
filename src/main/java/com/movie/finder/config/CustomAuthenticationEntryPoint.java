@@ -1,6 +1,7 @@
 package com.movie.finder.config;
 
 import com.movie.finder.exception.ErrorCode;
+import com.movie.finder.exception.MovieFinderException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -16,7 +17,6 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException, IOException {
-        response.setStatus(HttpStatus.UNAUTHORIZED.value()); // Set 401 status explicitly
-        response.getWriter().write(ErrorCode.MF_ERR_401.getMessage());
+        throw new MovieFinderException(ErrorCode.MF_ERR_401,HttpStatus.UNAUTHORIZED);
     }
 }

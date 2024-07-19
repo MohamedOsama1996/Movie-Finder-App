@@ -78,7 +78,7 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public void AddMovieToFavorites(int movieId, User user) {
+    public void addMovieToFavorites(int movieId, User user) {
 
 
             Optional<Movie> movie = movieRepository.findById(movieId);
@@ -101,9 +101,14 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public List<MovieDto> getUserFavorites(User user) {
-         List<UserMovie> userMovies = userMovieRepository.findByUser(new User(user.getId()));
-         List<Movie> movieFavorites = userMovies.stream().map(UserMovie::getMovie).toList();
-         return movieFavorites.stream().map(movie -> movieMapper.EntityToDto(movie)).toList();
+        try {
+            List<UserMovie> userMovies = userMovieRepository.findByUser(new User(user.getId()));
+            List<Movie> movieFavorites = userMovies.stream().map(UserMovie::getMovie).toList();
+            return movieFavorites.stream().map(movie -> movieMapper.EntityToDto(movie)).toList();
+        }catch (Exception ex){
+            throw new MovieFinderException(ErrorCode.MF_ERR_500,HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
 
     @Override

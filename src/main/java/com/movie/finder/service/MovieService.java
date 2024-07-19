@@ -10,7 +10,7 @@ public interface MovieService {
 
     List<MovieDto> getMoviesByPage(int page);
 
-    void AddMovieToFavorites(int movieId, User user);
+    void addMovieToFavorites(int movieId, User user);
 
     List<MovieDto>getUserFavorites(User user);
 

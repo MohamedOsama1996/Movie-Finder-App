@@ -38,7 +38,7 @@ public class MovieController {
     public ResponseEntity<?> addUserFilmToFavorite(@PathVariable int movieId){
         UsernamePasswordAuthenticationToken authentication = (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         User user = (User)authentication.getPrincipal();
-        movieService.AddMovieToFavorites(movieId,user);
+        movieService.addMovieToFavorites(movieId,user);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

@@ -47,7 +47,8 @@ public class AuthServiceImpl implements AuthService {
             user.setEmail(registerUserRequest.getEmail());
             user.setPassword(passwordEncoder.encode(registerUserRequest.getPassword()));
             user.setCreatedAt(Date.valueOf(LocalDate.now()));
-            return userMapper.toDto(userRepository.save(user));
+            User savedUser = userRepository.save(user);
+            return userMapper.toDto(savedUser);
         }catch (MovieFinderException ex){
             throw ex;
         }
@@ -58,14 +59,19 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public User authenticate(LoginUserRequest loginUserRequest) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        loginUserRequest.getEmail(),
-                        loginUserRequest.getPassword()
-                )
-        );
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            loginUserRequest.getEmail(),
+                            loginUserRequest.getPassword()
+                    )
+            );
 
-        return userRepository.findByEmail(loginUserRequest.getEmail())
-                .orElseThrow();
+            return userRepository.findByEmail(loginUserRequest.getEmail())
+                    .orElseThrow();
+        }catch (Exception ex){
+            throw new MovieFinderException(ErrorCode.MF_TOKEN_ERR_401, HttpStatus.UNAUTHORIZED);
+
+        }
     }
 }

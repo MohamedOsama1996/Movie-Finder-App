@@ -6,12 +6,14 @@ import com.movie.finder.mapper.GenreMapper;
 import com.movie.finder.model.Genre;
 import com.movie.finder.repo.GenreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
+@Profile("!test")
 public class GenreScheduler {
 
     @Autowired

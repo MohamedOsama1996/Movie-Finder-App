@@ -43,6 +43,8 @@ public class AuthController {
             description = DocumentationConstants.AuthControllerDescription.LOGIN_USER_API_DESCRIPTION)
     @PostMapping("/login")
     public ResponseEntity<LoginUserResponse> authenticate(@RequestBody LoginUserRequest loginUserDto) {
+
+
         User authenticatedUser = authenticationService.authenticate(loginUserDto);
 
         String jwtToken = jwtService.generateToken(authenticatedUser);

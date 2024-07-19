@@ -15,6 +15,7 @@ import com.movie.finder.repo.MovieGenreRepository;
 import com.movie.finder.repo.MovieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -26,6 +27,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Component
+@Profile("!test")
 public class MovieScheduler {
 
     @Value("${pages.maximum}")

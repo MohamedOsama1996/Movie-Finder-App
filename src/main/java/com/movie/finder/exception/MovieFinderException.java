@@ -1,6 +1,5 @@
 package com.movie.finder.exception;
 
-import com.movie.finder.controller.MovieController;
 import org.springframework.http.HttpStatus;
 
 public class MovieFinderException extends RuntimeException{
